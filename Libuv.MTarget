@@ -1,0 +1,68 @@
+
+%Target Lib_libuv
+{
+/*
+	Property
+	{
+		LibuvRoot "@('../../../External'->MakeAbsolute())/libuv"
+		libuvSrc "@('LibuvRoot')/src"
+		libuvInclude "@('LibuvRoot')/include"
+	}
+*/
+
+	Target
+	{
+		BaseName "libuv"
+		Type "StaticLibrary"
+		Group "External/libuv"
+	}
+	Compile
+	{
+		!!MalterlibCompileSupportTabSetings true
+		IndentWidth 2
+		TabWidth 2
+		UsesTabs false
+	}
+
+	Compile
+	{
+		!!CompileDialect "C"
+
+		SearchPath "@(GeneratedDirectory)libuv;@('src'->MakeAbsolute());@('include'->MakeAbsolute());@(Compile.SearchPath)"
+
+		PreprocessorDefines "_WIN32_WINNT=0x0600;_GNU_SOURCE;@(Compile.PreprocessorDefines)"
+		{
+			!!PlatformFamily Windows
+		}
+
+		Warnings Minimal
+	}
+
+	%Group "Lib"
+	{
+		%File "src/*.c"
+		%File "src/*.h"
+		%Group "win"
+		{
+			%File "src/win/*"
+			{
+				Compile.Disabled true
+				{
+					!PlatformFamily Windows
+				}
+			}
+		}
+		%Group "unix"
+		{
+			%File "src/unix/*"
+			{
+				Compile.Disabled true
+				{
+					!!PlatformFamily Windows
+				}
+			}
+		}
+	}
+
+}
+
